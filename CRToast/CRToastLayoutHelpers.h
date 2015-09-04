@@ -178,8 +178,16 @@ static CGRect CRStatusBarViewFrame(CRToastType type, CRToastAnimationDirection d
 #pragma mark - Notification Container Frame
 /// Get the notifications container frame based on orientation & notification size
 static CGRect CRGetNotificationContainerFrame(UIInterfaceOrientation statusBarOrientation, CGSize notificationSize) {
-    CGRect containerFrame = CGRectMake(0, 0, notificationSize.width, notificationSize.height);
+    CGRect containerFrame = CGRectMake([UIScreen mainScreen].bounds.size.width-notificationSize.width,
+                                      [UIScreen mainScreen].bounds.size.height-notificationSize.height,
+                                      notificationSize.width,
+                                      notificationSize.height
+                                      );
 
+    
+
+    
+    
     if (!CRFrameAutoAdjustedForOrientation()) {
         switch (statusBarOrientation) {
             case UIInterfaceOrientationLandscapeLeft: {

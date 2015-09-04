@@ -290,15 +290,18 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsSetupBlock(CRToastManager *wea
     statusBarView.hidden = notification.presentationType == CRToastPresentationTypeCover;
     
     UIView *notificationView = notification.notificationView;
+    notificationView.backgroundColor = [UIColor greenColor];
     notificationView.frame = notification.notificationViewAnimationFrame1;
     [_notificationWindow.rootViewController.view addSubview:notificationView];
     self.notificationView = notificationView;
     rootViewController.toastView = notificationView;
     self.statusBarView = statusBarView;
     
-    for (UIView *subview in _notificationWindow.rootViewController.view.subviews) {
-        subview.userInteractionEnabled = NO;
-    }
+    UIButton *sendButton = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 60, 30)];
+    [sendButton setTitle:@"SEND" forState:UIControlStateNormal];
+    [self.notificationView addSubview:sendButton];
+
+    [sendButton addTarget:self action:@selector(SendTapped) forControlEvents:UIControlEventTouchUpInside];
     
     _notificationWindow.rootViewController.view.userInteractionEnabled = YES;
     _notificationWindow.rootViewController.view.gestureRecognizers = notification.gestureRecognizers;
@@ -316,10 +319,17 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsSetupBlock(CRToastManager *wea
     if (notification.text.length > 0 || notification.subtitleText.length > 0) {
         // Synchronous notifications (say, tapping a button that presents a toast) cause VoiceOver to read the button immediately, which interupts the toast. A short delay (not the best solution :/) allows the toast to interupt the button.
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, [NSString stringWithFormat:@"Alert: %@, %@", notification.text ?: @"", notification.subtitleText ?: @""]);
+            UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, [NSString stringWithFormat:@"Alert: %@, %@", notification.text ?: @"erverv", notification.subtitleText ?: @"erver"]);
         });
     }
 }
+
+-(void)SendTapped {
+    NSLog(@"SEND TAPPED");
+    [self dismissNotification:YES];
+}
+
+
 
 - (void)showNotification:(CRToast *)notification
      inwardAnimationBlock:(CRToastAnimationStepBlock)inwardAnimationsBlock
